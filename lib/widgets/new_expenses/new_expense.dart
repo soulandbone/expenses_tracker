@@ -94,51 +94,102 @@ class _NewExpenseState extends State<NewExpense> {
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
-    return SizedBox(
-      height: double.infinity,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
-          child: Column(
-            children: [
-              TitleTF(_titleController),
-              Row(
-                children: [
-                  Expanded(child: AmountTF(_amountController)),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: DatePicker(
-                      selectedDate: _selectedDate,
-                      presentDatePicker: presentDatePicker,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  CategoryDropDownButton(
-                    selectedCategory: _selectedCategory,
-                    setCategory: setCategory,
-                  ),
-                  Spacer(),
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    label: Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: _submitExpenseData,
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final width = constraints.maxWidth;
 
-                    child: const Text('Save Expense'),
-                  ),
+        return SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
+              child: Column(
+                children: [
+                  if (width > 600)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: TitleTF(_titleController)),
+                        SizedBox(width: 16),
+                        Expanded(child: AmountTF(_amountController)),
+                      ],
+                    )
+                  else
+                    TitleTF(_titleController),
+                  if (width > 600)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CategoryDropDownButton(
+                          selectedCategory: _selectedCategory,
+                          setCategory: setCategory,
+                        ),
+                        Expanded(
+                          child: DatePicker(
+                            selectedDate: _selectedDate,
+                            presentDatePicker: presentDatePicker,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(child: AmountTF(_amountController)),
+                        Expanded(
+                          child: DatePicker(
+                            selectedDate: _selectedDate,
+                            presentDatePicker: presentDatePicker,
+                          ),
+                        ),
+                      ],
+                    ),
+                  SizedBox(height: 16),
+                  if (width > 600)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Spacer(),
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          label: Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _submitExpenseData,
+
+                          child: const Text('Save Expense'),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        CategoryDropDownButton(
+                          selectedCategory: _selectedCategory,
+                          setCategory: setCategory,
+                        ),
+                        Spacer(),
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          label: Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _submitExpenseData,
+
+                          child: const Text('Save Expense'),
+                        ),
+                      ],
+                    ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
